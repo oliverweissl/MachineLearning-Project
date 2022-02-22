@@ -1,0 +1,8 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+test_images/
+train_images/
+train_images_res_64/
+train_images_res_128/
+train_images_res_254/
