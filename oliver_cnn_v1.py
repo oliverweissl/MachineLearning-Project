@@ -3,6 +3,7 @@ from tensorflow import keras
 from tensorflow.keras import layers
 
 def create_model(input_shape):
+    IMG_SIZE = input_shape[0]
     inputs = keras.Input(shape=input_shape)
     data_augmentation = keras.Sequential(
         [
