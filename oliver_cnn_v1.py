@@ -7,7 +7,6 @@ def create_model(input_shape, num_classes):
     inputs = keras.Input(shape=input_shape)
     data_augmentation = keras.Sequential(
         [
-            layers.experimental.preprocessing.RandomFlip("horizontal"),
             layers.experimental.preprocessing.RandomRotation(0.1),
         ]
     )
