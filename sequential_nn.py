@@ -1,7 +1,7 @@
 from tensorflow import keras
 from tensorflow.keras import layers
 
-def create_model(input_shape):
+def create_model(input_shape, num_classes):
 
     inputs = keras.Input(shape=input_shape)
     data_augmentation = keras.Sequential(
@@ -17,5 +17,5 @@ def create_model(input_shape):
     x = layers.Dense(128, activation="relu")(x)
     x = layers.Dense(64, activation="relu")(x)
 
-    outputs = layers.Dense(units=26, activation="softmax")(x)
+    outputs = layers.Dense(units=num_classes, activation="softmax")(x)
     return keras.Model(inputs, outputs)

@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 
-def create_model(input_shape):
+def create_model(input_shape, num_classes):
     IMG_SIZE = input_shape[0]
     inputs = keras.Input(shape=input_shape)
     data_augmentation = keras.Sequential(
@@ -40,5 +40,5 @@ def create_model(input_shape):
     x = layers.Dropout(0.2)(x)
     x = layers.Dense(units=IMG_SIZE / 2)(x)
 
-    outputs = layers.Dense(units=26, activation="sigmoid")(x)
+    outputs = layers.Dense(units=num_classes, activation="sigmoid")(x)
     return keras.Model(inputs, outputs)
