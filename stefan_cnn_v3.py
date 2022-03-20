@@ -9,31 +9,35 @@ def create_model(input_shape, num_classes):
     data_augmentation = keras.Sequential()
     x = data_augmentation(inputs)
 
-    ACTIVATION_STR = "sigmoid"
+    ACTIVATION_STR = "swish"
 
 
     # Entry block
     #version tf 2.4.1
     #x = layers.experimental.preprocessing.Rescaling(1.0 / 255)(x)
     #-----------------
-    x = layers.Conv2D(32, 3, strides=2, padding="same", kernel_regularizer = l2(1e-4))(x)
+    x = layers.Conv2D(16, 3, strides=2, padding="same",activation =ACTIVATION_STR,  kernel_regularizer = l2(1e-4))(x)
     x = layers.BatchNormalization()(x)
-    x = layers.Activation(ACTIVATION_STR)(x)
 
-    x = layers.Conv2D(64, 3, padding="same", kernel_regularizer = l2(1e-4))(x)
+    x = layers.Conv2D(32, 3, padding="same",activation =ACTIVATION_STR, kernel_regularizer = l2(1e-4))(x)
     x = layers.BatchNormalization()(x)
-    x = layers.Activation(ACTIVATION_STR)(x)
+
+    x = layers.Conv2D(32, 3, padding="same",activation =ACTIVATION_STR, kernel_regularizer = l2(1e-4))(x)
+    x = layers.BatchNormalization()(x)
+
     x = layers.Dropout(0.1)(x)
 
     previous_block_activation = x  # Set aside residual
 
-    for size in [64]:
-        x = layers.Activation(ACTIVATION_STR)(x)
-        x = layers.SeparableConv2D(size, 3, padding="same", kernel_regularizer = l2(1e-4))(x)
+    for size in [64,128]:
+        x = layers.SeparableConv2D(size, 3, padding="same",activation =ACTIVATION_STR, kernel_regularizer = l2(1e-4))(x)
         x = layers.BatchNormalization()(x)
 
-        x = layers.Activation(ACTIVATION_STR)(x)
-        x = layers.SeparableConv2D(size, 3, padding="same", kernel_regularizer = l2(1e-4))(x)
+
+        x = layers.SeparableConv2D(size, 3, padding="same",activation =ACTIVATION_STR, kernel_regularizer = l2(1e-4))(x)
+        x = layers.BatchNormalization()(x)
+
+        x = layers.SeparableConv2D(size, 3, padding="same",activation =ACTIVATION_STR, kernel_regularizer = l2(1e-4))(x)
         x = layers.BatchNormalization()(x)
 
         x = layers.MaxPooling2D(3, strides=2, padding="same")(x)
@@ -46,15 +50,14 @@ def create_model(input_shape, num_classes):
         x = layers.Dropout(0.1)(x)
         previous_block_activation = x  # Set aside next residual
 
-    x = layers.SeparableConv2D(128, 3, padding="same", kernel_regularizer = l2(1e-4))(x)
+    x = layers.SeparableConv2D(256, 3, padding="same",activation =ACTIVATION_STR, kernel_regularizer = l2(1e-4))(x)
     x = layers.BatchNormalization()(x)
-    x = layers.Activation(ACTIVATION_STR)(x)
     x = layers.MaxPooling2D(3, strides=2, padding="same")(x)
     # x = layers.GlobalAveragePooling2D()(x)
     x = layers.Flatten()(x)
 
-    #x = layers.Dense(512, activation=activation, kernel_regularizer = l2(1e-4))(x)
+    #x = layers.Dense(FC_LAYER, activation=ACTIVATION_STR, kernel_regularizer = l2(1e-4))(x)
 
-    x = layers.Dropout(0.2)(x)
+    x = layers.Dropout(0.5)(x)
     outputs = layers.Dense(num_classes, activation="softmax")(x)
     return keras.Model(inputs, outputs)
